@@ -144,31 +144,21 @@ class Tweet {
         return "weekday";
     }
 
-    get getDayName(): string {
-        let day = "";
-
-        switch (this.time.getDay()) {
-            case 0:
-                day = "Sunday";
-            case 1:
-                day = "Monday";
-            case 2:
-                day = "Tuesday";
-            case 3:
-                day = "Wednesday";
-            case 4:
-                day = "Thursday";
-            case 5:
-                day = "Friday";
-            case 6:
-                day = "Saturday";
-        }
-
-        return day;
-    }
-
     getHTMLTableRow(rowNumber: number): string {
         //TODO: return a table row which summarizes the tweet with a clickable link to the RunKeeper activity
-        return "<tr></tr>";
+        const regex = /https:\/\/t.co\/[a-zA-Z0-9]{10}/g;
+
+        let index = `<td>${rowNumber}</td>`;
+        let activity_type = `<td>${this.activityType}</td>`;
+        let tweet = `<td>${this.text}</td>`;
+
+        let linkPattern = this.text.match(regex);
+        if (linkPattern !== null) {
+            linkPattern.forEach((link) => {
+                tweet = tweet.replace(link, `<a href=${link}>${link}</a>`);
+            });
+        }
+
+        return `<tr>${index}${activity_type}${tweet}</tr>`;
     }
 }
