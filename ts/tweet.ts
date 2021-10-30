@@ -10,13 +10,14 @@ class Tweet {
     //returns either 'live_event', 'achievement', 'completed_event', or 'miscellaneous'
     get source(): string {
         //TODO: identify whether the source is a live event, an achievement, a completed event, or miscellaneous.
-        if (this.text.toLowerCase().includes("just")) {
+        let tweet = this.text.toLowerCase();
+        if (tweet.includes("just completed") || tweet.includes("just posted")) {
             return "completed_event";
         }
-        else if (this.text.toLowerCase().includes("live")) {
+        else if (tweet.includes("live")) {
             return "live_event";
         }
-        else if (this.text.toLowerCase().includes("achieved")) {
+        else if (tweet.includes("achieved")) {
             return "achievement";
         }
 
@@ -43,71 +44,24 @@ class Tweet {
 
     get activityType(): string {
         if (this.source === 'completed_event') {
-            if (this.text.toLowerCase().includes("ski run")) {
-                return "ski run";
-            }
-            else if (this.text.toLowerCase().includes(" run") || (this.text.toLowerCase().includes("ran"))) {
-                return "run";
-            }
-            else if (this.text.toLowerCase().includes("walk")) {
-                return "walk";
-            }
-            else if (this.text.toLowerCase().includes("bike")) {
-                return "bike";
-            }
-            else if (this.text.toLowerCase().includes("hike")) {
-                return "hike";
-            }
-            else if (this.text.toLowerCase().includes("workout")) {
-                return "workout";
-            }
-            else if (this.text.toLowerCase().includes("meditation")) {
-                return "meditation";
-            }
-            else if (this.text.toLowerCase().includes("yoga")) {
-                return "yoga";
-            }
-            else if (this.text.toLowerCase().includes("health graph")) {
-                return "health graph";
-            }
-            else if (this.text.toLowerCase().includes("gym")) {
-                return "gym";
-            }
-            else if (this.text.toLowerCase().includes("swim")) {
-                return "swim";
-            }
-            else if (this.text.toLowerCase().includes("activity")) {
-                return "activity";
-            }
-            else if (this.text.toLowerCase().includes("skate")) {
-                return "skate";
-            }
-            else if (this.text.toLowerCase().includes("row")) {
-                return "row";
-            }
-            else if (this.text.toLowerCase().includes("chair ride")) {
-                return "chair ride";
-            }
-            else if (this.text.toLowerCase().includes("freestyle")) {
-                return "free style";
-            }
-            else if (this.text.toLowerCase().includes("pilates")) {
-                return "pilates";
-            }
-            else if (this.text.toLowerCase().includes("boxing")) {
-                return "boxing";
-            }
-            else if (this.text.toLowerCase().includes("sports")) {
-                return "sports";
-            }
-            else if (this.text.toLowerCase().includes("snowboard")) {
-                return "snowboard";
-            }
-            else if (this.text.toLowerCase().includes("dance")) {
-                return "dance";
-            }
-        }
+            let activityIndex = 0;
+            let splitTweet = this.text.toLowerCase().split(" ");
 
+            if (splitTweet.includes("km")) {
+                activityIndex = splitTweet.indexOf("km") + 1;
+            }
+            else if (splitTweet.includes("mi")) {
+                activityIndex = splitTweet.indexOf("mi") + 1;
+            }
+            else if (splitTweet.includes("in")) {
+                activityIndex = splitTweet.indexOf("in") - 1;
+            }
+            else if (splitTweet.includes("with")) {
+                activityIndex = splitTweet.indexOf("with") - 1;
+            }
+
+            return splitTweet[activityIndex];
+        }
         //TODO: parse the activity type from the text of the tweet
         return "unknown";
     }

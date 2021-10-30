@@ -1,100 +1,15 @@
 function countActivityTypes(tweet_array) {
-    let counts = {
-        "ski run": 0,
-        "run": 0,
-        "walk": 0,
-        "bike": 0,
-        "hike": 0,
-        "workout": 0,
-        "meditation": 0,
-        "yoga": 0,
-        "health graph": 0,
-        "gym": 0,
-        "swim": 0,
-        "activity": 0,
-        "skate": 0,
-        "row": 0,
-        "chair ride": 0,
-        "freestyle": 0,
-        "pilates": 0,
-        "boxing": 0,
-        "sports": 0,
-        "snowboard": 0,
-        "dance": 0,
-        "unknown": 0
-    };
-
-    tweet_array.forEach(tweet => {
-        switch (tweet.activityType) {
-            case "ski run":
-                counts["ski run"]++;
-                break;
-            case "run":
-                counts["run"]++;
-                break;
-            case "walk":
-                counts["walk"]++;
-                break;
-            case "bike":
-                counts["bike"]++;
-                break;
-            case "hike":
-                counts["hike"]++;
-                break;
-            case "workout":
-                counts["workout"]++;
-                break;
-            case "meditation":
-                counts["meditation"]++;
-                break;
-            case "yoga":
-                counts["yoga"]++;
-                break;
-            case "health graph":
-                counts["health graph"]++;
-                break;
-            case "gym":
-                counts["gym"]++;
-                break;
-            case "swim":
-                counts["swim"]++;
-                break;
-            case "activity":
-                counts["activity"]++;
-                break;
-            case "skate":
-                counts["skate"]++;
-                break;
-            case "row":
-                counts["row"]++;
-                break;
-            case "chair ride":
-                counts["chair ride"]++;
-                break;
-            case "freestyle":
-                counts["freestyle"]++;
-                break;
-            case "pilates":
-                counts["pilates"]++;
-                break;
-            case "boxing":
-                counts["boxing"]++;
-                break;
-            case "sports":
-                counts["sports"]++;
-                break;
-            case "snowboard":
-                counts["snowboard"]++;
-                break;
-            case "dance":
-                counts["dance"]++;
-                break;
-            case "unknown":
-                counts["unknown"]++;
+    activitiesObject = {}
+    tweet_array.forEach((tweet) => {
+        if (activitiesObject.hasOwnProperty(tweet.activityType)) {
+            activitiesObject[tweet.activityType]++;
+        }
+        else {
+            activitiesObject[tweet.activityType] = 1;
         }
     });
 
-    return counts;
+    return activitiesObject;
 }
 
 
@@ -172,16 +87,15 @@ function parseTweets(runkeeper_tweets) {
         return new Tweet(tweet.text, tweet.created_at);
     });
 
-    let counts = countActivityTypes(tweet_array);
-    document.querySelector("#numberActivities").textContent = Object.keys(counts).length - 1;
+    let activityCounts = countActivityTypes(tweet_array);
+    document.querySelector("#numberActivities").textContent = Object.keys(activityCounts).length - 1;
 
-    let top3 = top3Activities(counts);
+    let top3 = top3Activities(activityCounts);
     document.querySelector("#firstMost").textContent = top3[0][0];
     document.querySelector("#secondMost").textContent = top3[1][0];
     document.querySelector("#thirdMost").textContent = top3[2][0];
 
     let distancesArray = createDistancesArray(tweet_array, top3);
-    console.log(distancesArray);
     let minMaxArray = findMaxMin(distancesArray);
 
     document.querySelector("#shortestActivityType").textContent = minMaxArray[0]["activity_type"];
@@ -208,8 +122,13 @@ function parseTweets(runkeeper_tweets) {
         //TODO: Add mark and encoding
         "mark": "bar",
         "encoding": {
-            "x": { "field": "activity_type", "type": "nominal", "title": "Types of Activities" },
-            "y": { "aggregate": "count", "field": "activity_type", "type": "quantitative", "title": "Count" }
+            "x": {
+                "field": "activity_type", "type": "nominal", "title": "Types of Activities"
+            },
+            "y": {
+                "aggregate": "count", "field": "activity_type", "type": "quantitative", "scale": { "type": "log" },
+                "title": "Count"
+            }
         }
     };
 
@@ -222,9 +141,16 @@ function parseTweets(runkeeper_tweets) {
         //TODO: Add mark and encoding
         "mark": "point",
         "encoding": {
-            "x": { "field": "day", "type": "ordinal", "title": "Time (day)", "sort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] },
-            "y": { "field": "distance", "type": "quantitative" },
-            "color": { "field": "activity_type" }
+            "x": {
+                "field": "day", "type": "ordinal", "title": "Time (day)",
+                "sort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+            },
+            "y": {
+                "field": "distance", "type": "quantitative", "title": "Distance (mi)"
+            },
+            "color": {
+                "field": "activity_type", "title": "Activity Type"
+            }
         }
     };
 
@@ -237,9 +163,17 @@ function parseTweets(runkeeper_tweets) {
         //TODO: Add mark and encoding
         "mark": "point",
         "encoding": {
-            "x": { "field": "day", "type": "ordinal", "title": "Time (day)", "sort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] },
-            "y": { "field": "distance", "type": "quantitative", "aggregate": "mean" },
-            "color": { "field": "activity_type" }
+            "x": {
+                "field": "day", "type": "ordinal", "title": "Time (day)",
+                "sort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+            },
+            "y": {
+                "field": "distance", "type": "quantitative", "aggregate": "mean",
+                "title": "Average Distance (mi)"
+            },
+            "color": {
+                "field": "activity_type", "title": "Activity Type"
+            }
         }
     };
 

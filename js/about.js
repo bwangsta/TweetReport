@@ -2,8 +2,8 @@ function tweetDates(tweet_array) {
     let lastTweet = tweet_array[0];
     let firstTweet = tweet_array[tweet_array.length - 1];
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    $('#firstDate').text(firstTweet.time.toLocaleDateString('en-US', options));
-    $('#lastDate').text(lastTweet.time.toLocaleDateString('en-US', options));
+    document.querySelector("#firstDate").textContent = firstTweet.time.toLocaleDateString('en-US', options);
+    document.querySelector("#lastDate").textContent = lastTweet.time.toLocaleDateString('en-US', options);
 }
 
 function tweetCategories(tweet_array) {
@@ -38,17 +38,19 @@ function tweetCategories(tweet_array) {
     let miscellaneousPct = ((miscellaneous / tweet_array.length) * 100).toFixed(2) + "%";
     let userTweetsPct = ((userTweets / completed) * 100).toFixed(2) + "%";
 
-    $(".completedEvents").text(completed);
-    $(".liveEvents").text(live);
-    $(".achievements").text(achievements);
-    $(".miscellaneous").text(miscellaneous);
-    $(".written").text(userTweets);
+    for (let events of document.querySelectorAll(".completedEvents")) {
+        events.textContent = completed;
+    }
+    document.querySelector(".liveEvents").textContent = live;
+    document.querySelector(".achievements").textContent = achievements;
+    document.querySelector(".miscellaneous").textContent = miscellaneous;
+    document.querySelector(".written").textContent = userTweets;
 
-    $(".completedEventsPct").text(completedPct);
-    $(".liveEventsPct").text(livePct);
-    $(".achievementsPct").text(achievementsPct);
-    $(".miscellaneousPct").text(miscellaneousPct);
-    $(".writtenPct").text(userTweetsPct);
+    document.querySelector(".completedEventsPct").textContent = completedPct;
+    document.querySelector(".liveEventsPct").textContent = livePct;
+    document.querySelector(".achievementsPct").textContent = achievementsPct;
+    document.querySelector(".miscellaneousPct").textContent = miscellaneousPct;
+    document.querySelector(".writtenPct").textContent = userTweetsPct;
 }
 
 function parseTweets(runkeeper_tweets) {

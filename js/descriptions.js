@@ -32,18 +32,8 @@ function addEventHandlerForSearch() {
 
     document.querySelector("#searchCount").textContent = filtered_tweets.length;
 
-    // let table = document.querySelector("#tweetTable");
     $("#tweetTable").empty();
     filtered_tweets.forEach((tweet, index) => {
-        // // Insert a row at the end of the table
-        // let newRow = table.insertRow(index);
-
-        // // Insert a cell in the row at index 0
-        // let newCell = newRow.insertCell(index);
-
-        // // Append a text node to the cell
-        // let newText = document.createTextNode(tweet.getHTMLTableRow(index));
-        // newCell.appendChild(newText);
         $("#tweetTable").append(tweet.getHTMLTableRow(index + 1));
     });
 }
